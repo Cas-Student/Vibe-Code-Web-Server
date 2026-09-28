@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vibe Code Web Server</title>
+  </head>
+  <body>
+    <main>
+      <h1>Vibe Code Web Server</h1>
+      <p>Connection: <span id="connection-status">Connecting...</span></p>
+      <p id="server-message">Waiting for the server...</p>
+      <form action="/search" method="get" target="search-results">
+        <label for="search-query">Search the web</label>
+        <input id="search-query" name="q" type="search" maxlength="200" required>
+        <button type="submit">Search</button>
+      </form>
+      <iframe
+        name="search-results"
+        title="Search results"
+        sandbox="allow-forms allow-popups"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/scripts/client.js"></script>
+  </body>
+</html>
