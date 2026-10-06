@@ -3,24 +3,49 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vibe Code Web Server</title>
+    <title>Proxy Desk</title>
+    <link rel="stylesheet" href="/styles/proxy.css">
   </head>
   <body>
-    <main>
-      <h1>Vibe Code Web Server</h1>
-      <p>Connection: <span id="connection-status">Connecting...</span></p>
-      <p id="server-message">Waiting for the server...</p>
-      <form action="/search" method="get" target="search-results">
-        <label for="search-query">Search the web</label>
-        <input id="search-query" name="q" type="search" maxlength="200" required>
-        <button type="submit">Search</button>
-      </form>
-      <iframe
-        name="search-results"
-        title="Search results"
-        sandbox="allow-forms allow-popups"
-        referrerpolicy="no-referrer"
-      ></iframe>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="brandline">
+          <span class="brand-mark" aria-hidden="true">V</span>
+          <div class="brand-copy">
+            <p class="eyebrow">DuckDuckGo web proxy</p>
+            <h1>Proxy Desk</h1>
+          </div>
+        </div>
+        <div class="connection-state">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Connection: <span id="connection-status">Connecting...</span></span>
+          <p id="server-message">Waiting for the server...</p>
+        </div>
+      </header>
+      <div class="workspace">
+        <aside class="visit-panel" aria-labelledby="visit-heading">
+          <p class="eyebrow">Recent activity</p>
+          <h2 id="visit-heading">Proxy visits</h2>
+          <ol id="visit-list" aria-live="polite">
+            <li>No websites visited yet.</li>
+          </ol>
+        </aside>
+        <section class="browser-panel" aria-label="Web proxy">
+          <form class="search-bar" action="/search" method="get" target="search-results">
+            <label for="search-query">Search or enter a web address</label>
+            <div class="address-controls">
+              <input id="search-query" name="q" type="search" maxlength="200" placeholder="Search DuckDuckGo or enter a URL" required>
+              <button type="submit">Go</button>
+            </div>
+          </form>
+          <iframe
+            name="search-results"
+            title="Proxied page"
+            sandbox="allow-scripts allow-forms allow-popups"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </section>
+      </div>
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/scripts/client.js"></script>
