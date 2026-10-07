@@ -230,7 +230,13 @@ app.get('/search', (request, response) => {
     response.redirect(303, proxyUrl(destination));
 });
 
-app.get('/proxy', async (request, response) => {
+app.use('/proxy', express.raw({ type: () => true, limit: '10mb' }));
+
+app.all('/proxy', async (request, response) => {
+    if (!['GET', 'POST'].includes(request.method)) {
+        return response.sendStatus(405);
+    }
+
     const rawUrl = typeof request.query.url === 'string' ? request.query.url : '';
     if (!rawUrl || rawUrl.length > 4096) {
         return response.status(400).send('A valid destination address is required.');
@@ -238,6 +244,8 @@ app.get('/proxy', async (request, response) => {
 
     try {
         let destination = new URL(rawUrl);
+        let method = request.method;
+        let body = method === 'POST' ? request.body : undefined;
         for (const [key, value] of Object.entries(request.query)) {
             if (key !== 'url' && typeof value === 'string') destination.searchParams.set(key, value);
         }
@@ -247,7 +255,14 @@ app.get('/proxy', async (request, response) => {
             await validateDestination(destination);
             upstream = await fetch(destination, {
                 redirect: 'manual',
-                headers: { 'user-agent': 'Mozilla/5.0 (compatible; WebProxy/1.0)' },
+                method,
+                headers: {
+                    'user-agent': 'Mozilla/5.0 (compatible; WebProxy/1.0)',
+                    ...(body !== undefined && request.get('content-type')
+                        ? { 'content-type': request.get('content-type') }
+                        : {}),
+                },
+                ...(body !== undefined ? { body } : {}),
                 signal: AbortSignal.timeout(proxyTimeoutMs),
             });
 
@@ -255,6 +270,11 @@ app.get('/proxy', async (request, response) => {
             const location = upstream.headers.get('location');
             if (!location || redirects === 5) {
                 return response.status(502).send('The destination redirected too many times.');
+            }
+            if (upstream.status === 303
+                || ([301, 302].includes(upstream.status) && method === 'POST')) {
+                method = 'GET';
+                body = undefined;
             }
             destination = new URL(location, destination);
         }
