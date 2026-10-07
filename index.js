@@ -21,6 +21,7 @@ const activityTypes = new Set([
 function recordWebsiteVisit(destination) {
     const visit = {
         hostname: destination.hostname,
+        url: destination.href,
         visitedAt: new Date().toISOString(),
     };
     recentVisits.unshift(visit);

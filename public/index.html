@@ -23,13 +23,6 @@
         </div>
       </header>
       <div class="workspace">
-        <aside class="visit-panel" aria-labelledby="visit-heading">
-          <p class="eyebrow">Recent activity</p>
-          <h2 id="visit-heading">Proxy visits</h2>
-          <ol id="visit-list" aria-live="polite">
-            <li>No websites visited yet.</li>
-          </ol>
-        </aside>
         <section class="browser-panel" aria-label="Web proxy">
           <form class="search-bar" action="/search" method="get" target="search-results">
             <label for="search-query">Search or enter a web address</label>
@@ -38,6 +31,17 @@
               <button type="submit">Go</button>
             </div>
           </form>
+          <div class="browser-tools">
+            <details class="history-menu" id="history-menu">
+              <summary>History <span id="history-count">0</span></summary>
+              <div class="history-dropdown">
+                <ol id="visit-list" aria-live="polite">
+                  <li class="empty-history">No websites visited yet.</li>
+                </ol>
+              </div>
+            </details>
+            <button class="frame-expand" id="frame-expand" type="button" aria-expanded="false">Expand</button>
+          </div>
           <iframe
             name="search-results"
             title="Proxied page"

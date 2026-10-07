@@ -114,29 +114,7 @@ input {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
-  align-items: start;
-  gap: 24px;
-}
-
-.visit-panel {
-  min-height: 320px;
-  padding: 21px 19px;
-  border-radius: 6px;
-  background: var(--pine-deep);
-  color: #f5f7ef;
-}
-
-.visit-panel .eyebrow {
-  color: #a9c0b4;
-}
-
-.visit-panel h2 {
-  margin: 5px 0 19px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 21px;
-  font-weight: 500;
+  display: block;
 }
 
 #visit-list {
@@ -148,13 +126,24 @@ input {
 }
 
 #visit-list li {
-  display: grid;
-  gap: 5px;
   min-width: 0;
-  padding: 12px 0;
   border-top: 1px solid rgb(245 247 239 / 15%);
   color: #f5f7ef;
   font-size: 13px;
+}
+
+#visit-list a {
+  display: grid;
+  gap: 5px;
+  padding: 11px 13px;
+  color: inherit;
+  text-decoration: none;
+}
+
+#visit-list a:hover,
+#visit-list a:focus-visible {
+  outline: none;
+  background: rgb(245 247 239 / 10%);
 }
 
 #visit-list strong {
@@ -166,6 +155,11 @@ input {
   color: #a9c0b4;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
+}
+
+.empty-history {
+  padding: 12px 13px;
+  color: #a9c0b4;
 }
 
 .browser-panel {
@@ -182,6 +176,93 @@ input {
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
+}
+
+.browser-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.history-menu {
+  position: relative;
+}
+
+.history-menu summary,
+.frame-expand {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 13px;
+  border: 1px solid #cbd4ca;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.history-menu summary {
+  list-style: none;
+}
+
+.history-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.history-menu summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.history-menu[open] summary::after {
+  transform: rotate(225deg) translate(-1px, -1px);
+}
+
+#history-count {
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 3px;
+  background: var(--pine);
+  color: #f5f7ef;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-dropdown {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  z-index: 5;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(60vh, 520px);
+  overflow: auto;
+  border: 1px solid rgb(245 247 239 / 18%);
+  border-radius: 6px;
+  background: var(--pine-deep);
+  box-shadow: 0 12px 30px rgb(22 53 47 / 24%);
+}
+
+.frame-expand {
+  margin-left: auto;
+  background: var(--pine);
+  color: #f5f7ef;
+}
+
+.history-menu summary:focus-visible,
+.frame-expand:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
 }
 
 .address-controls {
@@ -262,25 +343,6 @@ iframe {
     font-size: 23px;
   }
 
-  .workspace {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 17px;
-  }
-
-  .visit-panel {
-    min-height: 0;
-    padding: 16px;
-  }
-
-  .visit-panel h2 {
-    margin-bottom: 10px;
-  }
-
-  #visit-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 14px;
-  }
-
   iframe {
     height: 70vh;
     min-height: 420px;
@@ -311,7 +373,51 @@ iframe {
     padding: 0 13px;
   }
 
-  #visit-list {
-    grid-template-columns: minmax(0, 1fr);
-  }
+}
+
+body.frame-expanded {
+  overflow: hidden;
+  background: #fff;
+}
+
+body.frame-expanded .app-shell {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body.frame-expanded .app-header,
+body.frame-expanded .search-bar {
+  display: none;
+}
+
+body.frame-expanded .workspace,
+body.frame-expanded .browser-panel {
+  height: 100vh;
+}
+
+body.frame-expanded .browser-tools {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  margin: 0;
+}
+
+body.frame-expanded .history-dropdown {
+  right: 0;
+  left: auto;
+}
+
+body.frame-expanded iframe {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
 }
